@@ -24,3 +24,34 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+.products-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  justify-content: center;
+  padding: 20px;
+}
+.product-card {
+  background: var(--foreground);
+  color: var(--background);
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  width: 250px;
+  padding: 15px;
+  text-align: center;
+}
+.pagination
+{
+  margin-top: 20px;
+  text-align: center;
+}
+.page-number
+{
+  margin: 5px;
+  padding: 8px 12px;
+  border: 1px solid var(--foreground);
+  border-radius: 4px;
+  cursor: pointer;
+  gap: 20px;
+}
