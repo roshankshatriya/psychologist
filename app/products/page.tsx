@@ -24,7 +24,7 @@ const Products = () => {
     const start = currentPage * PAGE_SIZE;
     const end = start + PAGE_SIZE;
 
-    const handlePageChange =(n)=> {
+    const handlePageChange = (n: number) => {
         setCurrentPage(n);
     }
 
