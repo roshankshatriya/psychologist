@@ -8,9 +8,17 @@ import { FiArrowLeft } from "react-icons/fi";
 import Link from "next/link";
 import { FiChevronDown } from "react-icons/fi";
 import { FiClock } from "react-icons/fi";
+import { FiCheckCircle } from "react-icons/fi";
 
-
-
+interface BookingDetails {
+  patient: string;
+  practitioner: string;
+  sessionType: string;
+  mode: "In-Person" | "Online";
+  date: string;
+  time: string;
+  details: string;
+}
 
 export default function SchedulePage() {
   const router = useRouter();
@@ -22,9 +30,139 @@ export default function SchedulePage() {
   const [showPopup, setShowPopup] = useState(false);
   const [selectedTime, setSelectedTime] = useState("");
 
+  // Form state
+  const [selectedDate, setSelectedDate] = useState("");
+  const [sessionDetails, setSessionDetails] = useState("");
+
+  // Confirmation state
+  const [isConfirmed, setIsConfirmed] = useState(false);
+  const [bookingDetails, setBookingDetails] = useState<BookingDetails | null>(null);
+
+  const handleConfirm = () => {
+    const booking: BookingDetails = {
+      patient: "Alice Patient",
+      practitioner: "Alice Docter",
+      sessionType: "Counselling (1 hour)",
+      mode: mode,
+      date: selectedDate || "Select Date",
+      time: selectedTime || "Select Time",
+      details: sessionDetails,
+    };
+    setBookingDetails(booking);
+    setIsConfirmed(true);
+  };
+
+  if (isConfirmed && bookingDetails) {
+    return (
+      <main className="min-h-screen bg-gradient-to-b from-[#f6f1ff] via-[#f6e9ff] to-[#ffe6e6] text-gray-900 flex flex-col">
+
+        {/* Header */}
+        <div className="fixed top-0 left-0 w-full z-30 bg-white shadow-sm">
+          <div className="px-4 py-5 flex items-center gap-3">
+            <button
+              onClick={() => setIsConfirmed(false)}
+              className="text-2xl text-gray-700 cursor-pointer hover:text-gray-900"
+            >
+              <FiArrowLeft />
+            </button>
+            <h1 className="text-lg font-semibold text-gray-800">
+              Booking Confirmed
+            </h1>
+          </div>
+        </div>
+
+        <div className="pt-[78px] px-5 pb-32 overflow-y-auto flex flex-col items-center justify-center">
+          {/* Success Icon */}
+          <div className="mt-8 mb-6">
+            <div className="relative w-20 h-20 flex items-center justify-center">
+              <div className="absolute inset-0 bg-gradient-to-r from-[#b892ff] to-[#ff9e9e] rounded-full opacity-20 animate-pulse"></div>
+              <FiCheckCircle className="text-5xl text-green-500 relative z-10" />
+            </div>
+          </div>
+
+          {/* Success Message */}
+          <h2 className="text-2xl font-bold text-gray-800 text-center mb-2">
+            Session Booked Successfully!
+          </h2>
+          <p className="text-gray-600 text-center mb-8">
+            Your session has been confirmed with {bookingDetails.practitioner}
+          </p>
+
+          {/* Booking Details Card */}
+          <div className="bg-white/50 backdrop-blur-md p-5 rounded-3xl shadow-md w-full max-w-md mb-6">
+            {/* Header with patient info */}
+            <div className="flex justify-between items-center mb-4 pb-4 border-b border-gray-200">
+              <div>
+                <h3 className="text-lg font-semibold text-gray-800">
+                  {bookingDetails.time}
+                </h3>
+                <p className="text-sm text-gray-600 mt-1">
+                  {bookingDetails.date}
+                </p>
+              </div>
+              <div className="flex items-center gap-3">
+                <Image
+                  src="/images/patient.jpg"
+                  alt="Doctor"
+                  width={45}
+                  height={40}
+                  className="rounded-full border border-gray-200"
+                />
+                <div>
+                  <p className="font-medium text-gray-800">{bookingDetails.practitioner}</p>
+                  <span className="bg-purple-200 text-purple-600 text-xs px-3 py-1 rounded-xl mt-1 inline-block shadow-sm">
+                    Confirmed
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            {/* Session Details */}
+            <div className="space-y-3 text-sm text-gray-700">
+              <div>
+                <p className="text-gray-600 font-medium">Session Type</p>
+                <p className="text-gray-800">{bookingDetails.sessionType}</p>
+              </div>
+              <div>
+                <p className="text-gray-600 font-medium">Session Mode</p>
+                <p className="text-gray-800">{bookingDetails.mode}</p>
+              </div>
+              <div>
+                <p className="text-gray-600 font-medium">Patient</p>
+                <p className="text-gray-800">{bookingDetails.patient}</p>
+              </div>
+              {bookingDetails.details && (
+                <div>
+                  <p className="text-gray-600 font-medium">Notes</p>
+                  <p className="text-gray-800">{bookingDetails.details}</p>
+                </div>
+              )}
+            </div>
+          </div>
+
+          {/* Action Buttons */}
+          <div className="w-full max-w-md space-y-3">
+            <button
+              onClick={() => router.push("/")}
+              className="w-full bg-gradient-to-r from-[#b892ff] to-[#ff9e9e] text-white font-medium py-3 rounded-2xl shadow-md hover:scale-105 transition"
+            >
+              Go to Home
+            </button>
+            <button
+              onClick={() => setIsConfirmed(false)}
+              className="w-full border-2 border-gray-300 text-gray-800 font-medium py-3 rounded-2xl hover:bg-gray-50 transition"
+            >
+              Schedule Another Session
+            </button>
+          </div>
+        </div>
+      </main>
+    );
+  }
+
   return (
     <main className="min-h-screen bg-gradient-to-b from-[#f6f1ff] via-[#f6e9ff] to-[#ffe6e6] text-gray-900 flex flex-col">
-      
+
       {/* Header */}
       <div className="fixed top-0 left-0 w-full z-30 bg-white shadow-sm">
         <div className="px-4 py-5 flex items-center gap-3">
@@ -127,7 +265,8 @@ export default function SchedulePage() {
             <div className="bg-white p-3 rounded-2xl shadow-sm flex justify-between items-center">
               <input
                 type="date"
-                defaultValue="YYYY-MM-DD"
+                value={selectedDate}
+                onChange={(e) => setSelectedDate(e.target.value)}
                 className="bg-transparent outline-none text-gray-700 text-sm w-full"
               />
               {/* <FiCalendar className="text-xl text-gray-500" /> */}
@@ -172,6 +311,8 @@ export default function SchedulePage() {
         </h2>
         <textarea
           placeholder="Enter session details here"
+          value={sessionDetails}
+          onChange={(e) => setSessionDetails(e.target.value)}
           className="w-full bg-white p-3 rounded-2xl shadow-sm text-gray-700 h-28 outline-none resize-none"
         />
       </div>
@@ -185,7 +326,10 @@ export default function SchedulePage() {
           Cancel
         </button>
 
-        <button className="w-[48%] bg-gradient-to-r from-[#b892ff] to-[#ff9e9e] text-white font-medium py-3 rounded-2xl shadow-md">
+        <button
+          onClick={handleConfirm}
+          className="w-[48%] bg-gradient-to-r from-[#b892ff] to-[#ff9e9e] text-white font-medium py-3 rounded-2xl shadow-md hover:scale-105 transition"
+        >
           Confirm
         </button>
       </div>
